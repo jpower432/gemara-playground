@@ -28,5 +28,22 @@ go.work.sum
 .env
 
 # Editor/IDE
-# .idea/
-# .vscode/
+.idea/
+.vscode/
+
+# Build output
+bin/
+bundler
+server
+
+# Generated WASM and schema assets
+web/validate.wasm
+web/wasm_exec.js
+web/versions.json
+web/schemas/
+
+# Node (frontend tooling if used)
+node_modules/
+
+# Agent
+.cursor

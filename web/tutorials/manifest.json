@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Control Catalog",
+    "description": "Container management tool security controls with assessment requirements and threat mappings",
+    "filename": "control-catalog.yaml",
+    "definition": "#ControlCatalog"
+  },
+  {
+    "name": "Threat Catalog",
+    "description": "Container management tool security threat assessment with capabilities and threats",
+    "filename": "threat-catalog.yaml",
+    "definition": "#ThreatCatalog"
+  },
+  {
+    "name": "Guidance Catalog",
+    "description": "Secure software development guidelines with recommendations and applicability",
+    "filename": "guidance-catalog.yaml",
+    "definition": "#GuidanceCatalog"
+  },
+  {
+    "name": "Policy",
+    "description": "Information security policy with scope, imports, adherence, and enforcement",
+    "filename": "policy.yaml",
+    "definition": "#Policy"
+  },
+  {
+    "name": "Risk Catalog",
+    "description": "Organizational risk catalog with risk categories, severity, and threat links",
+    "filename": "risk-catalog.yaml",
+    "definition": "#RiskCatalog"
+  }
+]

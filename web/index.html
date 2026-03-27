@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none';
+                 script-src 'self' https://esm.sh 'wasm-unsafe-eval';
+                 style-src 'self' 'unsafe-inline';
+                 connect-src 'self';
+                 img-src 'self' data:;
+                 font-src 'self';
+                 base-uri 'self';
+                 form-action 'none';">
+  <title>Gemara Playground</title>
+  <link rel="stylesheet" href="src/style.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "codemirror": "https://esm.sh/codemirror@6.0.1",
+      "@codemirror/lang-yaml": "https://esm.sh/@codemirror/lang-yaml@6.1.2",
+      "@codemirror/theme-one-dark": "https://esm.sh/@codemirror/theme-one-dark@6.1.2",
+      "@codemirror/search": "https://esm.sh/@codemirror/search@6.5.10",
+      "js-yaml": "https://esm.sh/js-yaml@4.1.0"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <h1 class="logo">Gemara Playground</h1>
+      <span class="tagline">Validate Gemara YAML documents against CUE schemas</span>
+    </div>
+    <nav class="header-links">
+      <a href="https://gemara.openssf.org/" target="_blank" rel="noopener">Gemara Docs</a>
+      <a href="https://cuelang.org/play/" target="_blank" rel="noopener">CUE Playground</a>
+      <a href="https://github.com/complytime/gemara-playground" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <div class="toolbar">
+    <div class="toolbar-group">
+      <label for="example-select">Example</label>
+      <select id="example-select">
+        <option value="">— Select tutorial —</option>
+      </select>
+    </div>
+    <div class="toolbar-group">
+      <label for="doctype-select">Document Type</label>
+      <select id="doctype-select">
+        <option value="">— Select type —</option>
+      </select>
+    </div>
+    <div class="toolbar-group">
+      <label for="version-select">Version</label>
+      <select id="version-select">
+        <option value="">Loading…</option>
+      </select>
+    </div>
+    <div class="toolbar-actions">
+      <button id="copy-btn" class="btn btn-secondary" title="Copy editor content to clipboard">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5.5" y="5.5" width="8" height="8" rx="1"/>
+          <path d="M10.5 5.5V3.5a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2"/>
+        </svg>
+        Copy
+      </button>
+      <button id="validate-btn" class="btn btn-primary">Validate</button>
+      <button id="visualize-btn" class="btn btn-secondary">Visualize</button>
+    </div>
+  </div>
+
+  <main class="main">
+    <div class="editor-panel">
+      <div id="editor"></div>
+    </div>
+    <div class="output-panel" id="output-panel">
+      <div id="validate-tab" class="output-tab-content">
+        <div class="output-placeholder">
+          Click <strong>Validate</strong> to check your document against the selected Gemara schema.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="visualize-view" class="visualize-view" hidden>
+    <div class="visualize-header">
+      <button id="viz-back-btn" class="btn btn-secondary viz-back-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 2L4 8l6 6"/>
+        </svg>
+        Back to Editor
+      </button>
+      <span id="viz-title" class="viz-title"></span>
+    </div>
+    <div id="viz-graph" class="viz-graph">
+      <div class="output-placeholder">
+        Loading relationship graph…
+      </div>
+    </div>
+  </div>
+
+  <script src="wasm_exec.js"></script>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

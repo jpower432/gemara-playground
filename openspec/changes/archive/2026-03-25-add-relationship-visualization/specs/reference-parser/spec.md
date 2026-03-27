@@ -1,0 +1,53 @@
+## ADDED Requirements
+
+### Requirement: Parse cross-document references from Gemara YAML
+The system SHALL parse a Gemara YAML document and extract all cross-document references, including `mapping-references`, `imported-capabilities`, `imported-threats`, `threats`, `threat-mappings`, `imports`, and `see-also` fields.
+
+#### Scenario: Parse a Control Catalog with threat references
+- **WHEN** the parser receives a Control Catalog YAML containing `controls[].threats[].reference-id` entries
+- **THEN** it returns a list of references with source field path, reference ID, and referenced entry IDs
+
+#### Scenario: Parse a Threat Catalog with imported capabilities and threats
+- **WHEN** the parser receives a Threat Catalog YAML containing `imported-capabilities` and `imported-threats` entries
+- **THEN** it returns references for each imported source with the reference ID and individual entry IDs
+
+#### Scenario: Parse a Policy with catalog imports
+- **WHEN** the parser receives a Policy YAML containing `imports.catalogs[].reference-id` entries
+- **THEN** it returns references for each imported catalog with the reference ID
+
+#### Scenario: Parse a Risk Catalog with threat references
+- **WHEN** the parser receives a Risk Catalog YAML containing `risks[].threats[].reference-id` entries
+- **THEN** it returns references for each threat source with the reference ID and entry IDs
+
+#### Scenario: Parse a Guidance Catalog with see-also references
+- **WHEN** the parser receives a Guidance Catalog YAML containing `guidelines[].see-also` entries
+- **THEN** it returns internal cross-references between guidelines
+
+### Requirement: Extract document identity from metadata
+The parser SHALL extract the document's own identity (`metadata.id`, `metadata.type`, `title`) to identify the center node of the graph.
+
+#### Scenario: Document has complete metadata
+- **WHEN** the parser receives a YAML document with `metadata.id`, `metadata.type`, and `title` fields
+- **THEN** it returns the document identity with all three fields populated
+
+#### Scenario: Document has no metadata.type field
+- **WHEN** the parser receives a YAML document without a `metadata.type` field
+- **THEN** it infers the document type from the presence of top-level keys (e.g., `controls` implies ControlCatalog, `threats` implies ThreatCatalog)
+
+### Requirement: Extract mapping-references metadata
+The parser SHALL extract `mapping-references` entries to provide display metadata (title, version, URL) for stub nodes.
+
+#### Scenario: Document has mapping-references
+- **WHEN** the parser receives a YAML document with `metadata.mapping-references` entries
+- **THEN** it returns each mapping reference with its ID, title, version, and URL
+
+### Requirement: Expose parser via API endpoint
+The system SHALL provide a `POST /api/resolve` endpoint that accepts a JSON body with the YAML content and returns the parsed graph structure.
+
+#### Scenario: Valid resolve request
+- **WHEN** a POST request is sent to `/api/resolve` with `{ "yaml": "..." }`
+- **THEN** the API returns a JSON graph with center node, resolved/stub nodes, and edges
+
+#### Scenario: Invalid YAML content
+- **WHEN** a POST request is sent with content that is not parseable as YAML
+- **THEN** the API returns HTTP 400 with a descriptive error message
