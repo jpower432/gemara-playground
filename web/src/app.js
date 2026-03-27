@@ -103,7 +103,7 @@ async function loadVersions() {
 
 async function loadTutorials() {
   try {
-    const resp = await fetch("/tutorials/manifest.json");
+    const resp = await fetch("tutorials/manifest.json");
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const tutorials = await resp.json();
 
@@ -123,7 +123,7 @@ async function loadTutorials() {
 
 async function loadTutorialFile(filename, definition) {
   try {
-    const resp = await fetch(`/tutorials/${filename}`);
+    const resp = await fetch(`tutorials/${filename}`);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const content = await resp.text();
     setEditorContent(content);
