@@ -33,7 +33,6 @@ go.work.sum
 
 # Build output
 bin/
-bundler
 server
 
 # Generated WASM and schema assets

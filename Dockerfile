@@ -7,9 +7,9 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-RUN go run ./cmd/bundler/
-RUN GOOS=js GOARCH=wasm go build -o web/validate.wasm ./cmd/wasm/
-RUN cp "$(go env GOROOT)/lib/wasm/wasm_exec.js" web/wasm_exec.js
+RUN go run ./cmd/bundler/ \
+    && GOOS=js GOARCH=wasm go build -o web/validate.wasm ./cmd/wasm/ \
+    && cp "$(go env GOROOT)/lib/wasm/wasm_exec.js" web/wasm_exec.js
 
 FROM nginx:1-alpine
 
