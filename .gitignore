@@ -37,6 +37,7 @@ server
 
 # Generated WASM and schema assets
 web/validate.wasm
+web/validate.wasm.sha256
 web/wasm_exec.js
 web/versions.json
 web/schemas/

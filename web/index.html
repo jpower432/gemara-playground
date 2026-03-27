@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'none';
-                 script-src 'self' https://esm.sh 'wasm-unsafe-eval' 'sha256-AapPXJzpqYndBNVg9SHz42F9WlPTgecyeKMYTGJ9uVM=';
+                 script-src 'self' https://esm.sh 'wasm-unsafe-eval' 'sha256-ulN11IDG6bjQq3yyY/15EcByxDjRcBYbJfEPoNwK6sk=';
                  style-src 'self' 'unsafe-inline';
                  connect-src 'self';
                  img-src 'self' data:;
@@ -23,6 +23,13 @@
       "@codemirror/theme-one-dark": "https://esm.sh/@codemirror/theme-one-dark@6.1.2",
       "@codemirror/search": "https://esm.sh/@codemirror/search@6.5.10",
       "js-yaml": "https://esm.sh/js-yaml@4.1.0"
+    },
+    "integrity": {
+      "https://esm.sh/codemirror@6.0.1": "sha384-YL2izXY6rDPj5rGRQ8rrOQjnj1q2ySpPnWQtiN5oLfIedVh/qsj8KEB61zL0afzp",
+      "https://esm.sh/@codemirror/lang-yaml@6.1.2": "sha384-M+f5Pf3hfJQrS5mQv8MZedO2kmjbHl+yR+zgkBvraxqJ1d6PJzWk1FP+CQ4Tl059",
+      "https://esm.sh/@codemirror/theme-one-dark@6.1.2": "sha384-yVtuYi63vy0cu7FtL7p0eg8sWO0UTayB2JG0+myxZNLNxnTwWaACpHWq81limpbI",
+      "https://esm.sh/@codemirror/search@6.5.10": "sha384-EPJmhSEsnn6R1+4rBinXbrKQjZuku3pcAVRYPUVRGqMRfmAsfzdQ96ROxvWoW830",
+      "https://esm.sh/js-yaml@4.1.0": "sha384-ThCvyB8yyKfiFpAbX0crNZnpPFSwHph9aSAFJiFiEjXsIk7nuzWYgW6WIi+kJu8L"
     }
   }
   </script>
@@ -102,6 +109,7 @@
     </div>
   </div>
 
+  <script src="src/csp-report.js"></script>
   <script src="wasm_exec.js"></script>
   <script type="module" src="src/app.js"></script>
 </body>

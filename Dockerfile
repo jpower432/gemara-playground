@@ -9,7 +9,8 @@ COPY . .
 
 RUN go run ./cmd/bundler/ \
     && GOOS=js GOARCH=wasm go build -o web/validate.wasm ./cmd/wasm/ \
-    && cp "$(go env GOROOT)/lib/wasm/wasm_exec.js" web/wasm_exec.js
+    && cp "$(go env GOROOT)/lib/wasm/wasm_exec.js" web/wasm_exec.js \
+    && sha256sum web/validate.wasm | awk '{print $1}' > web/validate.wasm.sha256
 
 FROM nginx:1-alpine
 

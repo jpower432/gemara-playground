@@ -25,9 +25,10 @@ build-wasm:
 	@echo "Building WASM validation binary..."
 	GOOS=js GOARCH=wasm go build -o web/validate.wasm ./cmd/wasm/
 	cp "$$(go env GOROOT)/lib/wasm/wasm_exec.js" web/wasm_exec.js
+	sha256sum web/validate.wasm | awk '{print $$1}' > web/validate.wasm.sha256
 
 build-static: sync-schemas build-wasm
 	@echo "Static site assembled in web/"
 
 clean:
-	rm -rf bin/ web/validate.wasm web/wasm_exec.js web/versions.json web/schemas/
+	rm -rf bin/ web/validate.wasm web/validate.wasm.sha256 web/wasm_exec.js web/versions.json web/schemas/

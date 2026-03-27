@@ -528,15 +528,35 @@ const DEFAULT_YAML = `# Gemara Playground
 # Then choose a Document Type and Version, and click Validate.
 `;
 
+async function verifyIntegrity(buffer, expectedHex) {
+  const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  if (hashHex !== expectedHex) {
+    throw new Error("WASM integrity check failed: hash mismatch");
+  }
+}
+
 async function initWasm() {
   try {
     validateBtn.disabled = true;
     validateBtn.textContent = "Loading…";
-    const go = new Go();
-    const result = await WebAssembly.instantiateStreaming(
+
+    const [wasmResp, hashResp] = await Promise.all([
       fetch("validate.wasm"),
-      go.importObject,
-    );
+      fetch("validate.wasm.sha256"),
+    ]);
+    if (!wasmResp.ok) throw new Error(`WASM fetch failed: HTTP ${wasmResp.status}`);
+
+    const wasmBytes = await wasmResp.arrayBuffer();
+
+    if (hashResp.ok) {
+      const expectedHash = (await hashResp.text()).trim();
+      await verifyIntegrity(wasmBytes, expectedHash);
+    }
+
+    const go = new Go();
+    const result = await WebAssembly.instantiate(wasmBytes, go.importObject);
     go.run(result.instance);
     wasmReady = true;
     validateBtn.disabled = false;
