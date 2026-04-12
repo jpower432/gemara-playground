@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: Apache-2.0
+{{- if .Values.registry.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gide-registry
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gide.labels" . | nindent 4 }}
+    {{- include "gide.selectorLabels" (dict "component" "gide-registry" "root" .) | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "gide.selectorLabels" (dict "component" "gide-registry" "root" .) | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "gide.labels" . | nindent 8 }}
+        {{- include "gide.selectorLabels" (dict "component" "gide-registry" "root" .) | nindent 8 }}
+    spec:
+      containers:
+        - name: zot
+          image: {{ .Values.registry.image }}
+          ports:
+            - containerPort: 5000
+              name: registry
+          resources:
+            {{- toYaml .Values.registry.resources | nindent 12 }}
+{{- end }}

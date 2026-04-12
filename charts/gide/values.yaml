@@ -1,0 +1,70 @@
+# SPDX-License-Identifier: Apache-2.0
+#
+# Default values for gide — targeting kind development clusters.
+# Override with values-openshift.yaml (or equivalent) for production.
+
+# -- Model configuration for the kagent ModelConfig CRD.
+modelConfig:
+  # Create a default-model-config alongside gide-model-config.
+  # kagent's controller requires default-model-config for built-in agents.
+  # Defaults to false because kagent typically owns this resource.
+  # Set true only on clusters where no default-model-config exists.
+  createDefault: false
+  provider: AnthropicVertexAI
+  model: claude-sonnet-4@20250514
+  apiKeySecret:
+    name: gide-gcp-credentials
+    key: application_default_credentials.json
+  # Provider-specific settings. Only vertexAI is used when provider is AnthropicVertexAI.
+  vertexAI:
+    projectID: ""
+    location: us-east5
+
+# -- MCP server images and toggles.
+mcpServers:
+  gemara:
+    enabled: true
+    image: ghcr.io/gemaraproj/gemara-mcp:latest
+  oras:
+    enabled: true
+    image: ghcr.io/oras-project/oras-mcp:main
+    requireApproval:
+      - fetch_manifest
+  github:
+    enabled: true
+    image: ghcr.io/github/github-mcp-server:latest
+    toolsets: "repos,code_security"
+    secretName: gide-github-token
+    requireApproval:
+      - get_file_contents
+
+# -- Agent toggles and configuration.
+agents:
+  orchestrator:
+    enabled: true
+  threatModeler:
+    enabled: true
+    skills:
+      enabled: false
+      url: https://github.com/complytime/gemara-playground.git
+      ref: main
+      path: skills/stride-threat-model
+
+# -- Built-in OCI registry (dev only). Disable for production clusters
+# where an external registry (Quay, GHCR, etc.) is available.
+registry:
+  enabled: true
+  image: ghcr.io/project-zot/zot-linux-amd64:latest
+  service:
+    port: 5000
+    type: NodePort
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+  seed:
+    enabled: true
+    image: ghcr.io/oras-project/oras:v1.2.2

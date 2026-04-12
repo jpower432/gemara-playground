@@ -1,0 +1,102 @@
+# SPDX-License-Identifier: Apache-2.0
+{{- if .Values.agents.threatModeler.enabled }}
+apiVersion: kagent.dev/v1alpha2
+kind: Agent
+metadata:
+  name: gide-threat-modeler
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gide.labels" . | nindent 4 }}
+spec:
+  description: "GIDE Threat Modeler — STRIDE-based threat analysis, ThreatCatalog and ControlCatalog authoring"
+  type: Declarative
+  {{- if .Values.agents.threatModeler.skills.enabled }}
+  skills:
+    gitRefs:
+      - url: {{ .Values.agents.threatModeler.skills.url }}
+        ref: {{ .Values.agents.threatModeler.skills.ref }}
+        path: {{ .Values.agents.threatModeler.skills.path }}
+  {{- end }}
+  declarative:
+    runtime: go
+    modelConfig: gide-model-config
+    systemMessage: |
+      You are a GIDE specialist agent for Layer 2 (Controls): threat identification, capability mapping, and control authoring.
+
+      ## Workflow
+
+      1. GATHER CONTEXT: Use github-mcp (get_file_contents, search_code) to fetch template artifacts and repository context. If the orchestrator provides upstream L1 artifacts, use them as input.
+      2. ANALYZE: Identify system capabilities. For each capability, evaluate STRIDE categories (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege). Skip categories with no meaningful threat.
+      3. AUTHOR THREATCATALOG: Use gemara-mcp's threat_assessment prompt for artifact guidance. Write the YAML, then validate with validate_gemara_artifact. Fix and re-validate (max 3 attempts).
+      4. AUTHOR CONTROLCATALOG (when requested): Use gemara-mcp's control_catalog prompt. Each control must reference threats it mitigates. Write the YAML, validate, fix and re-validate.
+      5. RETURN: Return validated artifact YAML to the orchestrator.
+
+      ## Constraints
+      - Always validate after authoring.
+      - Do NOT interact with OCI registries.
+      - Never fabricate repository content.
+    tools:
+      {{- if .Values.mcpServers.gemara.enabled }}
+      - type: McpServer
+        mcpServer:
+          apiGroup: kagent.dev
+          kind: MCPServer
+          name: gemara-mcp
+          toolNames:
+            - validate_gemara_artifact
+            - migrate_gemara_artifact
+      {{- end }}
+      {{- if .Values.mcpServers.github.enabled }}
+      - type: McpServer
+        mcpServer:
+          apiGroup: kagent.dev
+          kind: MCPServer
+          name: github-mcp
+          toolNames:
+            - get_file_contents
+            - search_code
+            - search_repositories
+          {{- with .Values.mcpServers.github.requireApproval }}
+          requireApproval:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- end }}
+    a2aConfig:
+      skills:
+        - id: threat-assessment
+          name: STRIDE Threat Assessment
+          description: >-
+            Analyze threats for a system using STRIDE methodology.
+            Produces CapabilityCatalog and ThreatCatalog grounded in
+            repository context and optional template artifacts.
+          inputModes:
+            - text
+          outputModes:
+            - text
+          tags:
+            - stride
+            - threats
+            - capabilities
+            - layer-2
+          examples:
+            - "Analyze threats for github.com/org/repo"
+            - "Create a ThreatCatalog for a Kubernetes admission controller"
+            - "Identify threats for this container image pipeline"
+        - id: control-authoring
+          name: Control Catalog Authoring
+          description: >-
+            Author a ControlCatalog that mitigates identified threats.
+            Each control includes assessment requirements and references
+            the threats it addresses.
+          inputModes:
+            - text
+          outputModes:
+            - text
+          tags:
+            - controls
+            - assessment-requirements
+            - layer-2
+          examples:
+            - "Create controls for these threats"
+            - "Author a ControlCatalog mitigating the ThreatCatalog"
+{{- end }}

@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: Apache-2.0
+apiVersion: v2
+name: gide
+description: >-
+  GIDE (Gemara IDE) — a multi-agent platform for authoring, validating,
+  and managing Gemara GRC artifacts as OCI bundles.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+kubeVersion: ">=1.29.0-0"
+keywords:
+  - gemara
+  - grc
+  - threat-modeling
+  - oci
+  - kagent
+home: https://github.com/complytime/gemara-playground
+sources:
+  - https://github.com/complytime/gemara-playground
+maintainers:
+  - name: complytime
+annotations:
+  gide.complytime.org/requires: "kagent >= 0.8.0"

@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: Apache-2.0
+{{- if .Values.mcpServers.oras.enabled }}
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: oras-mcp
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gide.labels" . | nindent 4 }}
+spec:
+  deployment:
+    image: {{ .Values.mcpServers.oras.image }}
+    cmd: /bin/oras-mcp
+    args:
+      - serve
+    port: 3000
+  transportType: stdio
+  stdioTransport: {}
+{{- end }}

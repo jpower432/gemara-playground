@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: Apache-2.0
+{{- if .Values.mcpServers.github.enabled }}
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: github-mcp
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gide.labels" . | nindent 4 }}
+spec:
+  deployment:
+    image: {{ .Values.mcpServers.github.image }}
+    cmd: /server/github-mcp-server
+    args:
+      - stdio
+      - --toolsets={{ .Values.mcpServers.github.toolsets }}
+    port: 3000
+    {{- if .Values.mcpServers.github.secretName }}
+    secretRefs:
+      - name: {{ .Values.mcpServers.github.secretName }}
+    {{- end }}
+  transportType: stdio
+  stdioTransport: {}
+{{- end }}

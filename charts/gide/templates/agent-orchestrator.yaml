@@ -1,0 +1,52 @@
+# SPDX-License-Identifier: Apache-2.0
+{{- if .Values.agents.orchestrator.enabled }}
+apiVersion: kagent.dev/v1alpha2
+kind: Agent
+metadata:
+  name: gide-orchestrator
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gide.labels" . | nindent 4 }}
+spec:
+  description: "GIDE Orchestrator — routes missions to specialists, assembles Gemara OCI bundles"
+  type: Declarative
+  declarative:
+    runtime: go
+    modelConfig: gide-model-config
+    promptTemplate:
+      dataSources:
+        - kind: ConfigMap
+          name: kagent-builtin-prompts
+          alias: builtin
+        - kind: ConfigMap
+          name: gide-prompts
+          alias: gide
+    systemMessage: |
+      {{`{{include "builtin/a2a-communication"}}`}}
+      {{`{{include "builtin/tool-usage-best-practices"}}`}}
+      {{`{{include "gide/orchestrator-prompt"}}`}}
+    tools:
+      {{- if .Values.mcpServers.oras.enabled }}
+      - type: McpServer
+        mcpServer:
+          apiGroup: kagent.dev
+          kind: MCPServer
+          name: oras-mcp
+          toolNames:
+            - list_wellknown_registries
+            - list_repositories
+            - list_tags
+            - list_referrers
+            - fetch_manifest
+            - parse_reference
+          {{- with .Values.mcpServers.oras.requireApproval }}
+          requireApproval:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- end }}
+      {{- if .Values.agents.threatModeler.enabled }}
+      - type: Agent
+        agent:
+          name: gide-threat-modeler
+      {{- end }}
+{{- end }}

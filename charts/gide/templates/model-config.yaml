@@ -1,0 +1,38 @@
+# SPDX-License-Identifier: Apache-2.0
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: gide-model-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gide.labels" . | nindent 4 }}
+spec:
+  provider: {{ .Values.modelConfig.provider }}
+  model: {{ .Values.modelConfig.model }}
+  apiKeySecret: {{ .Values.modelConfig.apiKeySecret.name }}
+  apiKeySecretKey: {{ .Values.modelConfig.apiKeySecret.key }}
+  {{- if eq .Values.modelConfig.provider "AnthropicVertexAI" }}
+  anthropicVertexAI:
+    projectID: {{ required "modelConfig.vertexAI.projectID is required" .Values.modelConfig.vertexAI.projectID }}
+    location: {{ .Values.modelConfig.vertexAI.location }}
+  {{- end }}
+---
+{{- if .Values.modelConfig.createDefault }}
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: default-model-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gide.labels" . | nindent 4 }}
+spec:
+  provider: {{ .Values.modelConfig.provider }}
+  model: {{ .Values.modelConfig.model }}
+  apiKeySecret: {{ .Values.modelConfig.apiKeySecret.name }}
+  apiKeySecretKey: {{ .Values.modelConfig.apiKeySecret.key }}
+  {{- if eq .Values.modelConfig.provider "AnthropicVertexAI" }}
+  anthropicVertexAI:
+    projectID: {{ .Values.modelConfig.vertexAI.projectID }}
+    location: {{ .Values.modelConfig.vertexAI.location }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,13 @@
+GIDE {{ .Chart.AppVersion }} installed in namespace {{ .Release.Namespace }}.
+
+Prerequisite: kagent >= 0.8.0 must be installed in this namespace.
+
+Access:
+  kagent UI:   kubectl port-forward -n {{ .Release.Namespace }} svc/kagent-ui 8001:8080
+  kagent API:  kubectl port-forward -n {{ .Release.Namespace }} svc/kagent-controller 8083:8083
+{{- if .Values.registry.enabled }}
+  OCI registry: kubectl port-forward -n {{ .Release.Namespace }} svc/gide-registry {{ .Values.registry.service.port }}:{{ .Values.registry.service.port }}
+{{- end }}
+
+Tear down:
+  helm uninstall {{ .Release.Name }} -n {{ .Release.Namespace }}
