@@ -14,9 +14,9 @@ keywords:
   - threat-modeling
   - oci
   - kagent
-home: https://github.com/complytime/gemara-playground
+home: https://github.com/jpower432/gemara-playground
 sources:
-  - https://github.com/complytime/gemara-playground
+  - https://github.com/jpower432/gemara-playground
 maintainers:
   - name: complytime
 annotations:

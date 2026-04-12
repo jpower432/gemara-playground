@@ -1,4 +1,4 @@
-module github.com/complytime/gemara-playground
+module github.com/jpower432/gemara-playground
 
 go 1.25.8
 

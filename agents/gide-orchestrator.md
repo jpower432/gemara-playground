@@ -58,7 +58,7 @@ Delegation messages include:
 
 | Use Case | Template Path |
 |:--|:--|
-| Kubernetes admission controller | `complytime/gemara-playground/templates/k8s-admission-controller/` |
+| Kubernetes admission controller | `jpower432/gemara-playground/templates/k8s-admission-controller/` |
 
 ## Bundle Assembly
 

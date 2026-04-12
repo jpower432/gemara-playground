@@ -73,7 +73,7 @@ data:
     ### Template Locations
     | Use Case | Template Path |
     |:---|:---|
-    | Kubernetes admission controller | complytime/gemara-playground/templates/k8s-admission-controller/ |
+    | Kubernetes admission controller | jpower432/gemara-playground/templates/k8s-admission-controller/ |
 
     If no template exists for the use case, delegate without a template reference.
 

@@ -49,7 +49,7 @@ The orchestrator SHALL know where pre-packaged use case template repos are locat
 
 #### Scenario: Delegation with template reference
 - **WHEN** the orchestrator delegates a threat modeling task to the threat modeler
-- **THEN** the delegation message includes the GitHub repo path for the relevant use case template (e.g., `github.com/complytime/gemara-playground/templates/k8s-admission-controller/`)
+- **THEN** the delegation message includes the GitHub repo path for the relevant use case template (e.g., `github.com/jpower432/gemara-playground/templates/k8s-admission-controller/`)
 
 #### Scenario: No template available
 - **WHEN** no pre-packaged template exists for the user's use case

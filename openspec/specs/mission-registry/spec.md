@@ -23,7 +23,7 @@ Each mission SHALL include a `composeTask` function that transforms structured f
 
 #### Scenario: Threat model task composition
 - **WHEN** the user submits the threat model form with `repository: "github.com/org/repo"` and `template: "k8s-admission-controller"`
-- **THEN** `composeTask` produces a message like: "Analyze threats and author controls for a Kubernetes admission controller. Template artifacts: github.com/complytime/gemara-playground/templates/k8s-admission-controller/ Target repository: github.com/org/repo Produce: CapabilityCatalog, ThreatCatalog, ControlCatalog"
+- **THEN** `composeTask` produces a message like: "Analyze threats and author controls for a Kubernetes admission controller. Template artifacts: github.com/jpower432/gemara-playground/templates/k8s-admission-controller/ Target repository: github.com/org/repo Produce: CapabilityCatalog, ThreatCatalog, ControlCatalog"
 
 #### Scenario: No template selected
 - **WHEN** the user submits with no template selection

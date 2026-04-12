@@ -46,7 +46,7 @@ agents:
     enabled: true
     skills:
       enabled: false
-      url: https://github.com/complytime/gemara-playground.git
+      url: https://github.com/jpower432/gemara-playground.git
       ref: main
       path: skills/stride-threat-model
 
